@@ -6,12 +6,12 @@ import prisma from "../config/database";
 let token = "";
 
 beforeAll(async () => {
-  // Ensure user doesn't exist for clean test
+  
   await cleanupTestUser("test@example.com");
 });
 
 afterAll(async () => {
-  // Disconnect Prisma but don't delete user - let next suite use it
+  
   await prisma.$disconnect();
 });
 describe("Authentication Tests", () => {

@@ -7,13 +7,13 @@ let token = "";
 let habitId = "";
 
 beforeAll(async () => {
-  // Only cleanup if user doesn't exist - reuse from auth tests
+ 
   const existingUser = await prisma.user.findUnique({
     where: { email: "test@example.com" }
   });
 
   if (!existingUser) {
-    // Register user if it doesn't exist (in case habits tests run first)
+    
     await request(app).post("/api/auth/register").send({
       name: "Test User",
       email: "test@example.com",
@@ -21,7 +21,7 @@ beforeAll(async () => {
     });
   }
 
-  // Login to get token
+  
   const loginRes = await request(app).post("/api/auth/login").send({
     email: "test@example.com",
     password: "password123"
@@ -31,7 +31,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Clean up user and disconnect only at the very end
+  
   await cleanupTestUser("test@example.com");
   await prisma.$disconnect();
 });
