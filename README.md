@@ -105,16 +105,3 @@ npm test
 # Run in development (example)
 npm run dev
 ```
-
-## License
-
-This project does not include a license in the repository by default. Add a license file (e.g., `LICENSE`) if you intend to open-source it.
-
----
-
-If you want, I can also:
-- Add a `README` section documenting the test user email and how the tests manage cleanup,
-- Add a minimal `.env.example` to the repo,
-- Or update/confirm the `package.json` scripts for `dev`, `start`, and `build`.
-
-Which of those (if any) would you like me to add now?
