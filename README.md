@@ -105,3 +105,100 @@ npm test
 # Run in development (example)
 npm run dev
 ```
+
+## API Reference
+
+Below are the primary API routes implemented by the backend. All requests and responses use JSON. Replace `:id` with the resource id.
+
+- **POST /api/auth/register** — Register a new user (public)
+  - Body: `{ "name": string, "email": string, "password": string }`
+  - Success: `201` `{ "success": true, "message": "User registered successfully" }`
+
+- **POST /api/auth/login** — Login and receive a JWT (public)
+  - Body: `{ "email": string, "password": string }`
+  - Success: `200` `{ "success": true, "token": "<jwt>" }`
+
+- **POST /api/habits** — Create habit (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Body: `{ "title": string, "description"?: string, "frequency": "daily" | "weekly" }`
+  - Success: `201` `{ "success": true, "data": { "id": "<habitId>", ... } }`
+
+- **GET /api/habits** — Get all habits for the authenticated user (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `200` `{ "success": true, "data": [ { "id": "<habitId>", ... } ] }`
+
+- **GET /api/habits/:id** — Get habit details (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `200` `{ "success": true, "data": { "id": "<habitId>", ... } }`
+
+- **PUT /api/habits/:id** — Update a habit (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Body: fields to update, e.g. `{ "title": "Updated" }`
+  - Success: `200` `{ "success": true, "message": "Updated successfully" }`
+
+- **DELETE /api/habits/:id** — Delete a habit (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `200` `{ "success": true, "message": "Habit deleted" }`
+
+- **POST /api/habits/:id/track** — Track completion for today (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `201` `{ "success": true, "message": "Tracked" }` (or `409` if already tracked today)
+
+- **GET /api/habits/:id/history** — Get last 7 days history (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `200` `{ "success": true, "data": [ { "date": "YYYY-MM-DD", "completed": true|false }, ... ] }`
+
+- **GET /api/habits/:id/streak** — Get streak count (protected)
+  - Headers: `Authorization: Bearer <token>`
+  - Success: `200` `{ "success": true, "streak": 3 }`
+
+## Example Requests / Responses
+
+Register (curl):
+
+```bash
+curl -X POST https://your-host/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"password123"}'
+```
+
+Response (201):
+
+```json
+{ "success": true, "message": "User registered successfully" }
+```
+
+Login (curl):
+
+```bash
+curl -X POST https://your-host/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password123"}'
+```
+
+Response (200):
+
+```json
+{ "success": true, "token": "<JWT_TOKEN>" }
+```
+
+Create Habit (example using token):
+
+```bash
+curl -X POST https://your-host/api/habits \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -d '{"title":"Morning Run","description":"Run 3km","frequency":"daily"}'
+```
+
+Response (201):
+
+```json
+{ "success": true, "data": { "id": "abc123", "title": "Morning Run", "frequency": "daily" } }
+```
+
+## JWT Usage Instructions
+
+- The API expects a JWT in the `Authorization` header for protected routes using the format:
+
+  `Authorization: Bearer <token>`
